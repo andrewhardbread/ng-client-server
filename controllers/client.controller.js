@@ -3,8 +3,8 @@ const ClientService = require('../services/client.service');
 _this = this;
 
 exports.getClients = async function (req, res, next) {
-    const page = req.query.page || 1;
-    const limit = req.query.limit || 100;
+    const page = req.query.page ? Number(req.query.page) : 1;
+    const limit = req.query.limit ? Number(req.query.limit) : 10;
 
     try {
 
