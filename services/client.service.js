@@ -1,18 +1,23 @@
 const Client = require('../models/client.model');
 
-_this = this;
-
-exports.getClients = async function (query, page, limit) {
-    let options = {
-        page,
-        limit
-    };
-
+exports.getClients = async function (options) {
     try {
+        let query = options.string;
 
-        return await Client.paginate(query, options);
+        if (!query || query === '') {
+            return await Client.find({});
+        }
+
+        query = decodeURI(query);
+
+        return await Client.find({
+            $text: {
+                $search: query
+            }
+        });
 
     } catch (e) {
+        console.log(e);
 
         throw Error('Error while paginating clients');
     }
@@ -31,6 +36,7 @@ exports.addClient = async function (client) {
         return await newClient.save();
 
     } catch (e) {
+        console.log(e);
         throw Error('Error while adding new client');
     }
 };
@@ -63,6 +69,7 @@ exports.updateClient = async function (client) {
         return await oldClient.save();
 
     } catch (e) {
+        console.log(e);
         throw Error('Error while updating client');
     }
 };
@@ -79,6 +86,7 @@ exports.deleteClient = async function (id) {
         return deleted;
 
     } catch (e) {
+        console.log(e);
         throw Error('Error while deleting client');
     }
 };

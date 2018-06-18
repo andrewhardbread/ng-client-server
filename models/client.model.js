@@ -23,6 +23,11 @@ const ClientSchema = new mongoose.Schema({
     }
 });
 
+ClientSchema.index(
+    { '$**': 'text' },
+    { name: 'string' }
+);
+
 ClientSchema.plugin(mongoosePaginate);
 
 const Client = mongoose.model('Client', ClientSchema);

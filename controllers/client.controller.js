@@ -1,14 +1,10 @@
 const ClientService = require('../services/client.service');
 
-_this = this;
-
-exports.getClients = async function (req, res, next) {
-    const page = req.query.page ? Number(req.query.page) : 1;
-    const limit = req.query.limit ? Number(req.query.limit) : 10;
+exports.getClients = async (req, res) => {
 
     try {
+        const clients = await ClientService.getClients({ ...req.query });
 
-        const clients = await ClientService.getClients({}, page, limit);
 
         return res.status(200).json({
             status: 200,
@@ -23,7 +19,7 @@ exports.getClients = async function (req, res, next) {
     }
 };
 
-exports.addClient = async function (req, res, next) {
+exports.addClient = async (req, res) => {
     let client = {
         general: { ...req.body.general },
         job: { ...req.body.job },
@@ -49,7 +45,7 @@ exports.addClient = async function (req, res, next) {
     }
 };
 
-exports.updateClient = async function (req, res, next) {
+exports.updateClient = async (req, res) => {
     if (!req.body._id) {
 
         return res.status(400).json({
@@ -106,7 +102,7 @@ exports.updateClient = async function (req, res, next) {
     }
 };
 
-exports.deleteClient = async function (req, res, next) {
+exports.deleteClient = async (req, res) => {
 
     const id = req.params.id;
 
