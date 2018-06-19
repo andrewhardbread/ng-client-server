@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
-const mongoosePaginate = require('mongoose-paginate');
 
 const ClientSchema = new mongoose.Schema({
+    id: String,
     general: {
         firstName: String,
         lastName: String,
@@ -27,8 +27,6 @@ ClientSchema.index(
     { '$**': 'text' },
     { name: 'string' }
 );
-
-ClientSchema.plugin(mongoosePaginate);
 
 const Client = mongoose.model('Client', ClientSchema);
 

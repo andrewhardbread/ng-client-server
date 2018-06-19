@@ -1,20 +1,28 @@
 const Client = require('../models/client.model');
 
-exports.getClients = async function (options) {
+exports.getClients = async (options) => {
     try {
         let query = options.string;
+        let clients;
 
         if (!query || query === '') {
-            return await Client.find({});
+            clients = await Client.find({});
+        } else {
+            query = decodeURI(query);
+
+            clients = await Client.find({
+                $text: {
+                    $search: query
+                }
+            });
         }
 
-        query = decodeURI(query);
-
-        return await Client.find({
-            $text: {
-                $search: query
+        return clients.map(
+            (client) => {
+                client.id = client._id;
+                return client;
             }
-        });
+        );
 
     } catch (e) {
         console.log(e);
@@ -23,7 +31,7 @@ exports.getClients = async function (options) {
     }
 };
 
-exports.addClient = async function (client) {
+exports.addClient = async (client) => {
     let newClient = new Client({
         general: { ...client.general },
         job: { ...client.job },
@@ -32,16 +40,14 @@ exports.addClient = async function (client) {
     });
 
     try {
-
         return await newClient.save();
-
     } catch (e) {
         console.log(e);
         throw Error('Error while adding new client');
     }
 };
 
-exports.updateClient = async function (client) {
+exports.updateClient = async (client) => {
     const id = client.id;
     let oldClient = null;
 
@@ -74,7 +80,7 @@ exports.updateClient = async function (client) {
     }
 };
 
-exports.deleteClient = async function (id) {
+exports.deleteClient = async (id) => {
     try {
 
         const deleted = await Client.remove({ _id: id });

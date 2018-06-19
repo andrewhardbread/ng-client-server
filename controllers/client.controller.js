@@ -5,17 +5,10 @@ exports.getClients = async (req, res) => {
     try {
         const clients = await ClientService.getClients({ ...req.query });
 
-
-        return res.status(200).json({
-            status: 200,
-            data: clients
-        });
+        return res.status(200).send(clients);
 
     } catch (e) {
-        return res.status(400).json({
-           status: 400,
-           message: e.message
-        });
+        return res.status(400).send(message);
     }
 };
 
@@ -30,10 +23,7 @@ exports.addClient = async (req, res) => {
     try {
         let addedClient = await ClientService.addClient(client);
 
-        return res.status(201).json({
-          status: 201,
-          data: addedClient
-        });
+        return res.status(201).send(addedClient);
 
     } catch (e) {
 
@@ -49,7 +39,6 @@ exports.updateClient = async (req, res) => {
     if (!req.body._id) {
 
         return res.status(400).json({
-           status: 400,
            message: 'id is required!'
         });
 
@@ -108,7 +97,7 @@ exports.deleteClient = async (req, res) => {
 
     try {
         const deletedClient = await ClientService.deleteClient(id);
-        return res.status(204).json({ status: 204,  data: deletedClient });
+        return res.status(204).send(deletedClient);
     } catch (e) {
         return res.status(400).json({ status: 400, message: e.message });
     }
